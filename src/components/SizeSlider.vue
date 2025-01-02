@@ -57,7 +57,10 @@ function onMouseUp() {
   document.removeEventListener('mouseup', onMouseUp)
 }
 
-function onMouseDown() {
+function onMouseDown(e: TouchEvent | MouseEvent) {
+  const [move, end] = e instanceof TouchEvent ? ['touchmove', 'touchend'] : ['mousemove', 'mouseup']
+  console.log(move, end)
+
   document.addEventListener('mousemove', onMouseMove)
   document.addEventListener('mouseup', onMouseUp)
 }
