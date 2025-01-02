@@ -1,12 +1,11 @@
 <template>
-  <router-view />
+  <h1>Written words</h1>
 </template>
 
 <script setup lang="ts">
 import { useHead } from 'unhead'
-import { RouterView } from 'vue-router'
 
 useHead({
-  titleTemplate: 'Jacob Hardbower | %s',
+  title: 'Blog',
 })
 </script>

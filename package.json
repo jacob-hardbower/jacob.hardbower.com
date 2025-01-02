@@ -16,6 +16,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.0.0-beta.8",
+    "tailwindcss": "^4.0.0-beta.8",
     "vue": "^3.5.13",
     "vue-router": "^4.4.5"
   },
@@ -23,6 +25,8 @@
     "@tsconfig/node22": "^22.0.0",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^22.9.3",
+    "@unhead/schema": "^1.11.14",
+    "@unhead/vue": "^1.11.14",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitest/eslint-plugin": "1.1.10",
     "@vue/eslint-config-prettier": "^10.1.0",
@@ -40,6 +44,7 @@
     "start-server-and-test": "^2.0.8",
     "typescript": "~5.6.3",
     "typescript-eslint": "^8.18.2",
+    "unhead": "^1.11.14",
     "vite": "^6.0.1",
     "vite-plugin-vue-devtools": "^7.6.5",
     "vitest": "^2.1.5",

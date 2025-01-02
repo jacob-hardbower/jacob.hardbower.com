@@ -1,35 +1,52 @@
-@import './base.css';
+@import 'tailwindcss';
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+/* young-serif-regular - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Young Serif';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./fonts/young-serif-v2-latin-regular.woff2') format('woff2');
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+/* kode-mono-500 - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Kode Mono';
+  font-style: normal;
+  font-weight: 400; /* wanted kode-mono-500 to be default, so made it 400 here */
+  src: url('./fonts/kode-mono-v2-latin-500.woff2') format('woff2');
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+/* protest-riot-regular - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Protest Riot';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./fonts/protest-riot-v2-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+@theme {
+  --font-display: 'Young Serif', 'serif';
+  --font-body: 'Kode Mono', 'monospace';
+  --font-handwriting: 'Protest Riot', 'sans-serif';
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+  --breakpoint-xs: 480px;
+  --breakpoint-3xl: 1920px;
+
+  --width-full-200: 200%;
+  --width-full-175: 175%;
+  --width-full-150: 150%;
+  --width-full-125: 125%;
+
+  --spacing-three-fourths: 75%;
+
+  --color-dill-100: #e6e7dc;
+  --color-dill-200: #d1d3c5;
+  --color-dill-400: #8e9175;
+  --color-dill-600: #6b6e59;
+  --color-dill-800: #4d4f3e;
+
+  --color-rot-600: #cd310f;
 }
