@@ -1,17 +1,18 @@
 <template>
   <div class="p-2 flex flex-col gap-3 relative">
-    <div class="absolute flex justify-center items-center -top-12 right-0 rotate-12">
+    <div class="absolute flex justify-center items-center -top-12 right-0 rotate-12 lg:-right-8">
       <div
         v-if="totalHolds > 3"
         class="absolute right-full bg-rot-600 text-dill-100 px-2 py-1 -mr-3 rounded"
       >
         {{ difficultyName[grade] }}
       </div>
-      <route-badge v-if="totalHolds > 3" class="text-rot-600" />
-      <icon-skull v-if="grade === 4 && totalHolds > 3" class="text-dill-100 absolute" />
-      <icon-pepper v-if="grade === 3" class="text-dill-100 absolute" />
-      <icon-clap v-if="grade === 2" class="text-dill-100 absolute" />
-      <icon-baby v-if="grade === 1" class="text-dill-100 absolute" />
+      <route-badge v-if="totalHolds > 3" class="text-rot-600 lg:w-18 lg:h-18" />
+      <component
+        v-if="totalHolds > 3"
+        :is="difficultyIconComponents[grade]"
+        class="text-dill-100 absolute lg:w-10 lg:h-10"
+      />
     </div>
     <div class="grid grid-cols-14">
       <button
@@ -275,6 +276,13 @@ const shapeComponents: ShapeComponentsInterface = {
   rock: IconHoldRock,
   wings: IconHoldWings,
   long: IconHoldLong,
+}
+
+const difficultyIconComponents: Record<keyof typeof difficultyName, typeof IconSkull> = {
+  1: IconBaby,
+  2: IconClap,
+  3: IconPepper,
+  4: IconSkull,
 }
 
 interface Hold {
