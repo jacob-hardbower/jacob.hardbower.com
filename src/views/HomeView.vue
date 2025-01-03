@@ -56,17 +56,19 @@
       </section>
     </main>
 
-    <footer>
+    <footer class="flex flex-col items-center">
       <div
-        class="relative flex flex-col gap-4 items-start border-2 border-dill-100 rounded-sm p-4 bg-dill-200 -mb-4 z-10"
+        class="relative flex flex-col gap-4 items-start border-2 border-dill-100 rounded-sm p-4 bg-dill-200 -mb-4 z-10 max-w-3xl md:mx-4 md:flex-row md:-mb-8"
       >
         <div>
           I’m a big fan of teaching and learning. I’ve written a few articles about front-end topics
           over on my blog.
         </div>
-        <jh-button to="blog">go to blog</jh-button>
+        <jh-button class="shrink-0" to="blog">go to blog</jh-button>
       </div>
-      <div class="bg-dill-100 text-dill-400 font-display text-xl pt-8 pb-4 px-4 rounded-sm">
+      <div
+        class="bg-dill-100 text-dill-400 font-display text-xl pt-8 pb-4 px-4 rounded-sm w-full md:text-center md:pt-14 md:pb-6"
+      >
         That's all. Go outside!
       </div>
     </footer>
