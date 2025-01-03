@@ -15,6 +15,11 @@ const router = createRouter({
       name: 'blog',
       component: () => import('../views/BlogView.vue'),
     },
+    {
+      path: '/drum',
+      name: 'drum',
+      component: () => import('../components/BeatSequencer.vue'),
+    },
   ],
 })
 

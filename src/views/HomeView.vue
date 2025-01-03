@@ -48,7 +48,9 @@
         </div>
         <div class="bg-dill-100 rounded-sm max-w-107 shrink-0">
           <component :is="component" />
-          <div class="bg-dill-800 p-2 flex gap-2 text-dill-200 text-xs rounded-b-sm">
+          <div
+            class="bg-dill-800 p-2 flex gap-2 text-dill-200 text-xs rounded-b-sm md:px-4 md:py-3"
+          >
             <icon-info class="w-3.5 h-3.5 shrink-0" />
             <div>{{ componentDescription }}</div>
           </div>
