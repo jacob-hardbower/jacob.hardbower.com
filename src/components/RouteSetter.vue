@@ -10,7 +10,7 @@
       <route-badge v-if="totalHolds > 3" class="text-rot-600" />
       <icon-skull v-if="grade === 4 && totalHolds > 3" class="text-dill-100 absolute" />
       <icon-pepper v-if="grade === 3" class="text-dill-100 absolute" />
-      <icon-thumbs-up v-if="grade === 2" class="text-dill-100 absolute" />
+      <icon-clap v-if="grade === 2" class="text-dill-100 absolute" />
       <icon-baby v-if="grade === 1" class="text-dill-100 absolute" />
     </div>
     <div class="grid grid-cols-14">
@@ -68,7 +68,7 @@ import SizeSlider from '@/components/SizeSlider.vue'
 import IconSkull from '@/components/icons/IconSkull.vue'
 import IconPepper from '@/components/icons/IconPepper.vue'
 import IconBaby from '@/components/icons/IconBaby.vue'
-import IconThumbsUp from '@/components/icons/IconThumbsUp.vue'
+import IconClap from '@/components/icons/IconClap.vue'
 import IconHoldLong from '@/components/icons/IconHoldLong.vue'
 import IconHoldCarolina from '@/components/icons/IconHoldCarolina.vue'
 import IconHoldHeart from '@/components/icons/IconHoldHeart.vue'
@@ -244,9 +244,9 @@ const sizeClasses = {
 
 const difficultyName: Record<number, string> = {
   1: 'Easy',
-  2: 'Medium',
+  2: 'Moderate',
   3: 'Hard',
-  4: 'Impossible',
+  4: 'Expert',
 }
 
 function onGridClick(cell: number): null | void {

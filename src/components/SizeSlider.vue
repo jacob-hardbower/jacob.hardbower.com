@@ -36,16 +36,15 @@ const handle = ref<HTMLElement>()
 
 const dragPos = ref<number | null>()
 
-function onMouseMove(event: MouseEvent) {
+function onMove(event: MouseEvent | TouchEvent) {
   if (!container.value || !handle.value) return
-  const rect = container.value.getBoundingClientRect()
-  const containerWidth = rect.width
+  const { width, left } = container.value.getBoundingClientRect()
+  const cursorPosX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX
   dragPos.value =
-    Math.max(Math.min(containerWidth, event.clientX - rect.left), 0) -
-    handle.value.getBoundingClientRect().width / 2
+    Math.max(Math.min(width, cursorPosX - left), 0) - handle.value.getBoundingClientRect().width / 2
 }
 
-function onMouseUp() {
+function onStop(e: MouseEvent | TouchEvent) {
   if (!container.value || !dragPos.value || !handle.value) return
   const containerWidth = container.value.getBoundingClientRect().width
   const handleWidth = handle.value.getBoundingClientRect().width / 2
@@ -53,27 +52,39 @@ function onMouseUp() {
   else if (dragPos.value + handleWidth < (containerWidth / 3) * 2) selectSize(1)
   else selectSize(2)
   dragPos.value = null
-  document.removeEventListener('mousemove', onMouseMove)
-  document.removeEventListener('mouseup', onMouseUp)
+  const [move, end] = e instanceof TouchEvent ? ['touchmove', 'touchend'] : ['mousemove', 'mouseup']
+  document.removeEventListener(move as keyof DocumentEventMap, onMove as EventListener)
+  document.removeEventListener(end as keyof DocumentEventMap, onStop as EventListener)
 }
 
-function onMouseDown(e: TouchEvent | MouseEvent) {
+function onStart(e: TouchEvent | MouseEvent) {
+  if (e.cancelable) e.preventDefault()
   const [move, end] = e instanceof TouchEvent ? ['touchmove', 'touchend'] : ['mousemove', 'mouseup']
-  console.log(move, end)
-
-  document.addEventListener('mousemove', onMouseMove)
-  document.addEventListener('mouseup', onMouseUp)
+  document.addEventListener(move as keyof DocumentEventMap, onMove as EventListener)
+  document.addEventListener(end as keyof DocumentEventMap, onStop as EventListener)
 }
 
 onMounted(() => {
   if (handle.value) {
-    handle.value.addEventListener('mousedown', onMouseDown)
+    handle.value.addEventListener('mousedown' as keyof DocumentEventMap, onStart as EventListener)
+    handle.value.addEventListener(
+      'touchstart' as keyof DocumentEventMap,
+      onStart as EventListener,
+      { passive: false },
+    )
   }
 })
 
 onBeforeUnmount(() => {
   if (handle.value) {
-    handle.value.removeEventListener('mousedown', onMouseDown)
+    handle.value.removeEventListener(
+      'mousedown' as keyof DocumentEventMap,
+      onStart as EventListener,
+    )
+    handle.value.removeEventListener(
+      'touchstart' as keyof DocumentEventMap,
+      onStart as EventListener,
+    )
   }
 })
 
