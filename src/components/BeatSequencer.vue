@@ -1,60 +1,70 @@
 <template>
-  <div class="p-2 flex flex-col gap-4">
-    <div class="flex flex-col gap-2">
-      <div
-        class="flex gap-2"
-        v-for="(iconComponent, instrument) in instrumentIcons"
-        :key="instrument"
-      >
-        <component :is="iconComponent" class="w-6 h-6" />
-        <sequencer-note
-          :aria-label="`${instrument} note ${note}`"
-          v-for="note in 8"
-          :key="instrument + note"
-          :checked="notes[note - 1][instrument]"
-          @change="notes[note - 1][instrument] = !notes[note - 1][instrument]"
-        />
-      </div>
-    </div>
-    <div class="flex gap-2 items-center">
-      <IconMetronome class="w-8" />
-      <div
-        class="w-full h-2 relative overflow-hidden before:absolute before:w-full before:bottom-0 before:bg-dill-400 before:h-0.5"
-      >
+  <div class="@container">
+    <div class="p-2 @sm:px-5 @sm:pt-6 @sm:pb-3">
+      <div class="flex flex-col gap-2 mb-4 @sm:gap-3.5 @sm:mb-5">
         <div
-          class="w-0 h-0 absolute top-0 border-l-4 border-l-transparent border-r-transparent border-r-4 border-b-8 border-b-dill-400"
-          :style="
-            playing
-              ? `animation: slide ${bpmToMilliseconds[selectedBpm] * 8}ms linear 0s infinite`
-              : ''
-          "
-        ></div>
-      </div>
-    </div>
-    <div class="flex gap-2 items-center justify-between">
-      <jh-button @click="onPlaybackClick">{{ playing ? 'stop' : 'play' }}</jh-button>
-      <div class="shrink-0 flex gap-1">
-        bpm:
-        <sequencer-bpm-radio
-          v-for="bpm in bpmOptions"
-          :key="bpm"
-          @change="selectedBpm = bpm"
-          :bpm
-          :checked="selectedBpm === bpm"
-        />
-      </div>
-      <div class="flex gap-2 items-center">
-        <button
-          class="w-5.5 h-5.5 border-1 rounded-xs border-transparent hover:border-dill-400 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-dill-400"
-          @click="shuffle"
+          role="grid"
+          class="flex gap-3 items-center @sm:gap-6"
+          v-for="(iconComponent, instrument) in instrumentIcons"
+          :key="instrument"
         >
-          <icon-shuffle class="w-full h-full" />
-        </button>
-        <button
+          <component :is="iconComponent" class="shrink-0 w-6 h-6 @sm:h-7 @sm:w-7" />
+          <div class="flex gap-2 justify-between w-full @sm:gap-3">
+            <sequencer-note
+              :active="activeNote === `${instrument}-${note}`"
+              :label="`${instrument} note ${note}`"
+              v-for="note in 8"
+              :key="instrument + note"
+              :checked="notes[note - 1][instrument]"
+              @change="onNoteChange(instrument, note)"
+              @up="activateNoteAbove(instrument, note)"
+              @down="activateNoteBelow(instrument, note)"
+              @left="activateNotePrevious(instrument, note)"
+              @right="activateNoteNext(instrument, note)"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-2 items-center mb-4 @sm:gap-5 @sm:mb-6">
+        <IconMetronome class="w-7 h-7 @sm:w-8 @sm:h-8 shrink-0" />
+        <div
+          class="w-full h-2 relative overflow-hidden before:absolute before:w-full before:bottom-0 before:bg-dill-400 before:h-0.5"
+        >
+          <div
+            class="w-0 h-0 absolute top-0 border-l-4 border-l-transparent border-r-transparent border-r-4 border-b-8 border-b-dill-400"
+            :style="
+              playing
+                ? `animation: slide ${bpmToMilliseconds[selectedBpm] * 8}ms linear 0s infinite`
+                : ''
+            "
+          ></div>
+        </div>
+      </div>
+      <div class="flex gap-2 items-center justify-between">
+        <jh-button @click="onPlaybackClick">{{ playing ? 'stop' : 'play' }}</jh-button>
+        <div class="shrink-0 flex gap-1 text-sm">
+          bpm:
+          <sequencer-bpm-radio
+            v-for="bpm in bpmOptions"
+            :key="bpm"
+            @change="selectedBpm = bpm"
+            :bpm
+            :checked="selectedBpm === bpm"
+          />
+        </div>
+        <div class="flex gap-2 items-center">
+          <button
+            class="w-5.5 h-5.5 border-1 rounded-xs border-transparent hover:border-dill-400 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-dill-400"
+            @click="shuffle"
+          >
+            <icon-shuffle class="w-full h-full" />
+          </button>
+          <!-- <button
           class="w-5.5 h-5.5 border-1 rounded-xs border-transparent hover:border-dill-400 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-dill-400"
         >
           <icon-music-notes class="w-full h-full" />
-        </button>
+        </button> -->
+        </div>
       </div>
     </div>
   </div>
@@ -89,14 +99,18 @@ const bpmOptions = [100, 120, 140] as const
 type BpmOption = (typeof bpmOptions)[number]
 let beatInterval: number
 
-const notes = ref<Array<Record<Instrument, boolean>>>(
-  new Array(8).fill(null).map(() => ({
-    kick: false,
-    snare: false,
-    hat: false,
-    clap: false,
-  })),
-)
+const activeNote = ref<string>(`${instruments[0]}-1`)
+
+const notes = ref<Array<Record<Instrument, boolean>>>([
+  { kick: true, snare: false, hat: false, clap: false },
+  { kick: false, snare: false, hat: false, clap: false },
+  { kick: true, snare: false, hat: false, clap: false },
+  { kick: false, snare: false, hat: true, clap: false },
+  { kick: true, snare: false, hat: false, clap: false },
+  { kick: false, snare: false, hat: false, clap: true },
+  { kick: true, snare: false, hat: false, clap: false },
+  { kick: false, snare: false, hat: true, clap: false },
+])
 
 const selectedBpm = ref<BpmOption>(120)
 const playing = ref<boolean>(false)
@@ -130,8 +144,10 @@ function startSequencer() {
   let counter = 0
   beatInterval = setInterval(() => {
     if (counter >= 8) counter = 0
+    // if (counter === 0) sound.play('bells', { sprite: 'clip' })
+    // sound.speed('bells', 1.14)
     instruments.forEach((instrument) => {
-      if (notes.value[counter][instrument]) sound.play('my-sound', { sprite: instrument })
+      if (notes.value[counter][instrument]) sound.play('drums', { sprite: instrument })
     })
     playing.value = true
     counter++
@@ -174,9 +190,27 @@ const premadeBeats = [
     { kick: false, snare: true, hat: true, clap: false },
     { kick: false, snare: true, hat: false, clap: true },
   ],
+  [
+    { kick: true, snare: false, hat: true, clap: false },
+    { kick: true, snare: false, hat: false, clap: false },
+    { kick: false, snare: false, hat: true, clap: false },
+    { kick: false, snare: false, hat: true, clap: false },
+    { kick: false, snare: true, hat: false, clap: false },
+    { kick: false, snare: false, hat: true, clap: false },
+    { kick: false, snare: false, hat: false, clap: true },
+    { kick: false, snare: false, hat: true, clap: true },
+  ],
 ]
 
-sound.add('my-sound', {
+// sound.add('bells', {
+//   url: '/sounds/bells.mp3',
+//   preload: true,
+//   sprites: {
+//     clip: { start: 0, end: 4 },
+//   },
+// })
+
+sound.add('drums', {
   url: '/sounds/drums.mp3',
   preload: true,
   sprites: {
@@ -186,6 +220,32 @@ sound.add('my-sound', {
     clap: { start: 3, end: 3.8 },
   },
 })
+
+function onNoteChange(instrument: Instrument, note: number) {
+  activeNote.value = `${instrument}-${note}`
+  notes.value[note - 1][instrument] = !notes.value[note - 1][instrument]
+}
+
+function activateNoteAbove(instrument: Instrument, note: number) {
+  if (instrument === instruments[0]) return
+  const instrumentAbove = instruments[instruments.indexOf(instrument) - 1]
+  activeNote.value = `${instrumentAbove}-${note}`
+}
+
+function activateNoteBelow(instrument: Instrument, note: number) {
+  if (instrument === instruments[instruments.length - 1]) return
+  const instrumentBelow = instruments[instruments.indexOf(instrument) + 1]
+  activeNote.value = `${instrumentBelow}-${note}`
+}
+
+function activateNoteNext(instrument: Instrument, note: number) {
+  if (note === 8) return
+  activeNote.value = `${instrument}-${note + 1}`
+}
+function activateNotePrevious(instrument: Instrument, note: number) {
+  if (note === 1) return
+  activeNote.value = `${instrument}-${note - 1}`
+}
 
 function onPlaybackClick() {
   if (playing.value) stopSequencer()

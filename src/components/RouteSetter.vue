@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2 flex flex-col gap-3 relative">
+  <div class="p-2 flex flex-col gap-3 relative md:pb-3">
     <div class="absolute flex justify-center items-center -top-12 right-0 rotate-12 lg:-right-8">
       <div
         v-if="totalHolds > 3"
@@ -14,7 +14,7 @@
         class="text-dill-100 absolute lg:w-10 lg:h-10"
       />
     </div>
-    <div class="grid grid-cols-14">
+    <div class="grid grid-cols-14" role="grid">
       <button
         v-for="(item, index) in 112"
         ref="cellElements"
