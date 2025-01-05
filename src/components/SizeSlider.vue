@@ -52,14 +52,20 @@ function onStop(e: MouseEvent | TouchEvent) {
   else if (dragPos.value + handleWidth < (containerWidth / 3) * 2) selectSize(1)
   else selectSize(2)
   dragPos.value = null
-  const [move, end] = e instanceof TouchEvent ? ['touchmove', 'touchend'] : ['mousemove', 'mouseup']
+  const [move, end] =
+    window.TouchEvent && e instanceof TouchEvent
+      ? ['touchmove', 'touchend']
+      : ['mousemove', 'mouseup']
   document.removeEventListener(move as keyof DocumentEventMap, onMove as EventListener)
   document.removeEventListener(end as keyof DocumentEventMap, onStop as EventListener)
 }
 
 function onStart(e: TouchEvent | MouseEvent) {
   if (e.cancelable) e.preventDefault()
-  const [move, end] = e instanceof TouchEvent ? ['touchmove', 'touchend'] : ['mousemove', 'mouseup']
+  const [move, end] =
+    window.TouchEvent && e instanceof TouchEvent
+      ? ['touchmove', 'touchend']
+      : ['mousemove', 'mouseup']
   document.addEventListener(move as keyof DocumentEventMap, onMove as EventListener)
   document.addEventListener(end as keyof DocumentEventMap, onStop as EventListener)
 }
