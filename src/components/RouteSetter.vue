@@ -25,7 +25,7 @@
         :tabindex="activeGridCell === index ? 0 : -1"
         :aria-label="holds[index] ? 'Remove hold' : 'Place hold'"
         @click="onGridClick(index)"
-        class="relative leading-0 aspect-square flex justify-center items-center text-dill-400 text-lg group outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-dill-400 hover:text-rot-600 focus-visible:text-rot-600 focus-visible:text-3xl group"
+        class="relative leading-0 aspect-square flex justify-center items-center text-dill-400 text-lg group outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-dill-400 hover:text-rot-600 focus-visible:text-rot-600 focus-visible:text-3xl group select-none"
         @keydown.left.prevent="focusCell(cellToLeft)"
         @keydown.right.prevent="focusCell(cellToRight)"
         @keydown.up.prevent="focusCell(cellAbove)"
@@ -33,7 +33,7 @@
       >
         <span class="absolute pointer-events-none group-hover:text-3xl">•</span>
         <template v-if="index === 6">
-          <div class="relative flex gap-1 -top-10 right-34 w-0 h-0">
+          <div class="relative flex gap-1 -top-10 right-34 w-0 h-0 sm:-top-11 sm:right-35">
             <div class="font-handwriting text-dill-800 shrink-0 relative top-0.5">Finish hold</div>
             <curved-arrow class="text-dill-400 shrink-0" />
           </div>
