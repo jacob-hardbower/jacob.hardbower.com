@@ -1,16 +1,19 @@
 <template>
   <div class="@container">
-    <div class="p-2 @sm:px-5 @sm:pt-6 @sm:pb-3">
-      <div class="flex flex-col gap-2 mb-4 @sm:gap-3.5 @sm:mb-5">
-        <div
-          role="grid"
-          class="flex gap-3 items-center @sm:gap-6"
-          v-for="(iconComponent, instrument) in instrumentIcons"
-          :key="instrument"
-        >
-          <component :is="iconComponent" class="shrink-0 w-6 h-6 @sm:h-7 @sm:w-7" />
-          <div class="flex gap-2 justify-between w-full @sm:gap-3">
+    <div class="px-4 pt-4 pb-3 @sm:pt-6 @sm:px-5">
+      <div role="grid" class="grid grid-cols-14 w-full gap-x-2 mb-4 @sm:mb-6">
+        <div class="grid grid-cols-1 col-span-2 gap-2 @sm:gap-3">
+          <component
+            :is="iconComponent"
+            v-for="(iconComponent, instrument) in instrumentIcons"
+            :key="instrument"
+            class="w-6 h-6 self-center @sm:w-7 @sm:h-7"
+          />
+        </div>
+        <div class="grid grid-cols-8 col-span-12 gap-2 @sm:gap-3">
+          <template v-for="instrument in instruments">
             <sequencer-note
+              class="self-center place-self-center w-full aspect-square"
               :active="activeNote === `${instrument}-${note}`"
               :label="`${instrument} note ${note}`"
               v-for="note in 8"
@@ -22,22 +25,22 @@
               @left="activateNotePrevious(instrument, note)"
               @right="activateNoteNext(instrument, note)"
             />
-          </div>
+          </template>
         </div>
-      </div>
-      <div class="flex gap-2 items-center mb-4 @sm:gap-5 @sm:mb-6">
-        <IconMetronome class="w-7 h-7 @sm:w-8 @sm:h-8 shrink-0" />
-        <div
-          class="w-full h-2 relative overflow-hidden before:absolute before:w-full before:bottom-0 before:bg-dill-400 before:h-0.5"
-        >
+        <div class="grid grid-cols-14 col-span-14 pt-3 @sm:pt-5">
+          <IconMetronome class="col-span-2 @sm:w-8" />
           <div
-            class="w-0 h-0 absolute top-0 border-l-4 border-l-transparent border-r-transparent border-r-4 border-b-8 border-b-dill-400"
-            :style="
-              playing
-                ? `animation: slide ${bpmToMilliseconds[selectedBpm] * 8}ms linear 0s infinite`
-                : ''
-            "
-          ></div>
+            class="w-full place-self-center h-2 col-span-12 relative overflow-hidden before:absolute before:w-full before:bottom-0 before:bg-dill-400 before:h-0.5"
+          >
+            <div
+              class="w-0 h-0 absolute top-0 border-l-4 border-l-transparent border-r-transparent border-r-4 border-b-8 border-b-dill-400"
+              :style="
+                playing
+                  ? `animation: slide ${bpmToMilliseconds[selectedBpm] * 8}ms linear 0s infinite`
+                  : ''
+              "
+            ></div>
+          </div>
         </div>
       </div>
       <div class="flex gap-2 items-center justify-between">

@@ -1,6 +1,8 @@
 <template>
-  <div class="p-2 flex flex-col gap-3 relative md:pb-3">
-    <div class="absolute flex justify-center items-center -top-12 right-0 rotate-12 lg:-right-8">
+  <div class="p-2 pb-3 flex flex-col gap-3 relative sm:p-3">
+    <div
+      class="absolute flex justify-center items-center -top-12 right-0 rotate-12 sm:-top-10 sm:-right-3 lg:-right-8 lg:-top-12"
+    >
       <div
         v-if="totalHolds > 3"
         class="absolute right-full bg-rot-600 text-dill-100 px-2 py-1 -mr-3 rounded"
@@ -53,7 +55,7 @@
     </div>
     <div class="flex justify-between gap-4 px-2">
       <div class="flex justify-center items-center gap-2">
-        <div>size:</div>
+        <div class="text-sm">size:</div>
         <size-slider class="w-24" @change="onSizeChange" />
       </div>
       <jh-button @click="onClear">clear</jh-button>

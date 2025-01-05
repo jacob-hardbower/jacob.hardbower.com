@@ -1,6 +1,6 @@
 <template>
   <label
-    class="w-5 h-5 border-2 border-dill-400 relative rounded-xs focus-within:rounded-xs @xs:w-6 @xs:h-6 @sm:w-7 @sm:h-7"
+    class="border-2 border-dill-400 relative rounded-xs focus-within:rounded-xs"
     :class="checked ? 'bg-dill-400' : 'bg-dill-100'"
   >
     <input
