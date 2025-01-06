@@ -1,37 +1,22 @@
 <template>
-  <div class="@container">
+  <div class="@container" role="group" aria-label="Crossword puzzle">
     <div class="px-4 pt-4 pb-4 flex flex-col items-center gap-y-6 gap-x-3 @sm:p-5 @sm:flex-row">
       <div>
-        <h3 class="font-display text-lg mb-1.5">Across</h3>
-        <ol class="text-xs mb-2 flex flex-col gap-1">
-          <li class="flex gap-1.5">
-            1. <label for="12" class="text-pretty">Vocalization directed toward deer</label>
-          </li>
-          <li class="flex gap-1.5">
-            2. <label for="31" class="text-pretty">Actress Streisand or Stanwyck</label>
-          </li>
-          <li class="flex gap-1.5">
-            3. <label for="52" class="text-pretty">A favorite pastime</label>
-          </li>
-          <li class="flex gap-1.5">
-            6. <label for="71" class="text-pretty">Rough-housing, wrestling, fetch</label>
-          </li>
-        </ol>
-
-        <h3 class="font-display text-lg mb-1.5">Down</h3>
-        <ol class="text-xs flex flex-col gap-1">
-          <li class="flex gap-1.5">
-            1. <label for="12" class="text-pretty">Legumes used in chili</label>
-          </li>
-          <li class="flex gap-1.5">
-            4. <label for="53" class="text-pretty">Dog-walking tool</label>
-          </li>
-          <li class="flex gap-1.5">
-            5. <label for="56" class="text-pretty">Occasionally, on the chair leg</label>
-          </li>
-        </ol>
+        <template v-for="{ title, clues, direction } in clueSections" :key="direction">
+          <h3 class="font-display text-lg mb-1.5">{{ title }}</h3>
+          <ol :class="['text-xs flex flex-col gap-1', { 'mb-2': direction === 'across' }]">
+            <li v-for="clue in clues" :key="`${clue.number}-${direction}`" class="flex gap-1.5">
+              {{ clue.number }}.
+              <label
+                :for="`${answers[clue.number].row}${answers[clue.number].col}`"
+                class="text-pretty"
+                >{{ clue.text }}</label
+              >
+            </li>
+          </ol>
+        </template>
       </div>
-      <div class="inline-grid grid-cols-7 grid-rows-9 shrink-0">
+      <div class="inline-grid grid-cols-7 grid-rows-9 shrink-0" role="grid">
         <div
           v-for="({ row, col, wordNums }, index) in cells"
           :key="index"
@@ -48,6 +33,7 @@
             type="text"
             maxlength="1"
             :id="`${row}${col}`"
+            :aria-label="`Row ${row}, Column ${col}`"
             pattern="[a-zA-Z]*"
             autocomplete="off"
             class="uppercase text-center w-7 h-7 outline-none inset-ring-1 ring-1 inset-ring-dill-400 rounded-xs focus-visible:inset-ring-2 focus-visible:inset-ring-white focus-visible:z-10"
@@ -60,7 +46,7 @@
               { 'inset-ring-dill-400 ring-dill-400': !inputValidity[`${row}${col}`] },
             ]"
             @input="
-              onInput(row, col, wordNums, ($event.target as HTMLInputElement)?.value || '', index)
+              onInput(row, col, wordNums, ($event.target as HTMLInputElement)?.value ?? '', index)
             "
           />
         </div>
@@ -87,13 +73,69 @@ const complete = computed(
     Object.values(inputValidity.value).every((validity) => validity === 'valid'),
 )
 
+type UserAnswer = {
+  across?: string[]
+  down?: string[]
+}
+
+type Answer = {
+  across?: string
+  down?: string
+  acrossClue?: string
+  downClue?: string
+  col: number
+  row: number
+}
+
+type AnswerNumber = 1 | 2 | 3 | 4 | 5 | 6
+type Answers = Record<AnswerNumber, Answer>
+type AnswerArray = Record<AnswerNumber, UserAnswer>
+
+interface Cell {
+  row: number
+  col: number
+  wordNums: AnswerNumber[]
+}
+
 const answers: Answers = {
-  1: { across: 'bark', down: 'beans', col: 2, row: 1 },
-  2: { across: 'barbara', col: 1, row: 3 },
-  3: { across: 'sleep', col: 2, row: 5 },
-  4: { down: 'leash', col: 3, row: 5 },
-  5: { down: 'pee', col: 6, row: 5 },
-  6: { across: 'play', col: 1, row: 7 },
+  1: {
+    across: 'bark',
+    down: 'beans',
+    acrossClue: 'Vocalization directed toward deer',
+    downClue: 'Legumes used in chili',
+    col: 2,
+    row: 1,
+  },
+  2: {
+    across: 'barbara',
+    acrossClue: 'Actress Streisand or Stanwyck',
+    col: 1,
+    row: 3,
+  },
+  3: {
+    across: 'sleep',
+    acrossClue: 'A favorite pastime',
+    col: 2,
+    row: 5,
+  },
+  4: {
+    down: 'leash',
+    downClue: 'Dog-walking tool',
+    col: 3,
+    row: 5,
+  },
+  5: {
+    down: 'pee',
+    downClue: 'Occasionally, on the chair leg',
+    col: 6,
+    row: 5,
+  },
+  6: {
+    across: 'play',
+    acrossClue: 'Rough-housing, wrestling, fetch',
+    col: 1,
+    row: 7,
+  },
 }
 
 const strippedAnswers: AnswerArray = Object.fromEntries(
@@ -108,7 +150,7 @@ const strippedAnswers: AnswerArray = Object.fromEntries(
 
 const userAnswers = ref<AnswerArray>({ ...strippedAnswers })
 
-function generateCells(answers: Answers) {
+function generateCells(answers: Answers): Cell[] {
   const cellMap: { [key: string]: { row: number; col: number; wordNums: AnswerNumber[] } } = {}
 
   const addCell = (row: number, col: number, num: AnswerNumber) => {
@@ -137,7 +179,7 @@ function generateCells(answers: Answers) {
   return Object.values(cellMap)
 }
 
-function isFirstCharacter(row: number, col: number, wordNums: AnswerNumber[]) {
+function isFirstCharacter(row: number, col: number, wordNums: AnswerNumber[]): AnswerNumber[] {
   let firstCharOf: AnswerNumber[] = []
   wordNums.forEach((wordNum: AnswerNumber) => {
     if (answers[wordNum].col === col && answers[wordNum].row === row) firstCharOf.push(wordNum)
@@ -190,61 +232,54 @@ function onInput(
 
 function checkValidity(row: number, col: number, wordNums: AnswerNumber[]) {
   wordNums.forEach((wordNum) => {
-    let directions: ('down' | 'across')[] = []
-    if (col === answers[wordNum].col) {
-      directions.push('down')
-    }
-    if (row === answers[wordNum].row) {
-      directions.push('across')
-    }
+    const directions: ('down' | 'across')[] = []
+    if (col === answers[wordNum].col) directions.push('down')
+    if (row === answers[wordNum].row) directions.push('across')
 
     directions.forEach((direction) => {
-      if (userAnswers.value[wordNum][direction]) {
-        if (!userAnswers.value[wordNum][direction].every((letter) => letter)) {
-          userAnswers.value[wordNum][direction].forEach((_, index) => {
-            const gridRow = direction === 'across' ? row : answers[wordNum].row + index
-            const gridCol = direction === 'down' ? col : answers[wordNum].col + index
-            inputValidity.value[`${gridRow}${gridCol}`] = undefined
-          })
-        } else {
-          const wordValidity = userAnswers.value[wordNum][direction].reduce(
-            (validity, letter, index) => {
-              return validity === 'invalid' ||
-                letter !== answers[wordNum][direction]?.split('')[index]
-                ? 'invalid'
-                : 'valid'
-            },
-            'valid',
-          )
+      const word = userAnswers.value[wordNum][direction]
+      if (!word) return
 
-          userAnswers.value[wordNum][direction].forEach((_, index) => {
-            const gridRow = direction === 'across' ? row : answers[wordNum].row + index
-            const gridCol = direction === 'down' ? col : answers[wordNum].col + index
-            inputValidity.value[`${gridRow}${gridCol}`] = wordValidity as Validity
-          })
-        }
+      const coordinates = word.map((_, index) => ({
+        row: direction === 'across' ? row : answers[wordNum].row + index,
+        col: direction === 'down' ? col : answers[wordNum].col + index,
+      }))
+
+      if (!word.every((letter) => letter)) {
+        coordinates.forEach(({ row, col }) => {
+          inputValidity.value[`${row}${col}`] = undefined
+        })
+        return
       }
+
+      const isValid = word.every(
+        (letter, index) => letter === answers[wordNum][direction]?.split('')[index],
+      )
+
+      coordinates.forEach(({ row, col }) => {
+        inputValidity.value[`${row}${col}`] = isValid ? 'valid' : 'invalid'
+      })
     })
   })
 }
 
-type Answer = {
-  across?: string
-  down?: string
-  col: number
-  row: number
+function getClues(direction: 'across' | 'down') {
+  return computed(() =>
+    Object.entries(answers)
+      .filter(([_, answer]) => answer[direction])
+      .map(([num, answer]) => ({
+        number: Number(num) as AnswerNumber,
+        text: answer[`${direction}Clue`],
+      }))
+      .sort((a, b) => a.number - b.number),
+  )
 }
-type UserAnswer = {
-  across?: string[]
-  down?: string[]
-}
-type AnswerNumber = 1 | 2 | 3 | 4 | 5 | 6
-type Answers = Record<AnswerNumber, Answer>
-type AnswerArray = Record<AnswerNumber, UserAnswer>
 
-interface Cell {
-  row: number
-  col: number
-  wordNums: AnswerNumber[]
-}
+const acrossClues = getClues('across')
+const downClues = getClues('down')
+
+const clueSections = [
+  { title: 'Across', clues: acrossClues.value, direction: 'across' as const },
+  { title: 'Down', clues: downClues.value, direction: 'down' as const },
+]
 </script>

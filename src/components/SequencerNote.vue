@@ -28,7 +28,7 @@ const props = defineProps<{
   label: string
 }>()
 
-const input = ref<HTMLElement>()
+const input = ref<HTMLInputElement>()
 
 watch(
   () => props.active,
@@ -37,5 +37,11 @@ watch(
   },
 )
 
-defineEmits(['change', 'up', 'down', 'left', 'right'])
+defineEmits<{
+  (e: 'change'): void
+  (e: 'up'): void
+  (e: 'down'): void
+  (e: 'left'): void
+  (e: 'right'): void
+}>()
 </script>

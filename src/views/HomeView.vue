@@ -12,8 +12,9 @@
   </nav>
   <div
     class="relative flex flex-col gap-12 text-sm max-w-107 mx-auto md:max-w-7xl md:gap-20 lg:text-base lg:gap-28"
+    role="main"
   >
-    <header class="relative rounded-sm bg-dill-100 md:text-center">
+    <header class="relative rounded-sm bg-dill-100 md:text-center" role="banner">
       <h1 class="flex flex-col gap-y-2 px-6 py-4 md:py-12 md:gap-y-6">
         <span class="font-display text-rot-600 text-4xl md:text-6xl">Jacob Hardbower</span>
         <span>is a designer and developer of the web</span>
@@ -31,6 +32,7 @@
         ) in interests"
         :key="name"
         class="flex flex-col gap-12 items-center md:flex-row md:justify-center"
+        :aria-labelledby="`section-${index}`"
       >
         <div class="flex flex-col gap-6 lg:flex-row items-start lg:gap-8">
           <img
@@ -38,9 +40,13 @@
             :alt="imgAlt"
             class="rounded-4xl max-w-40"
             :class="rotations[index]"
+            loading="lazy"
           />
           <div class="flex flex-col gap-4 lg:pt-4 lg:max-w-86">
-            <h2 class="font-display text-rot-600 text-4xl lg:text-6xl lg:w-60">
+            <h2
+              :id="`section-${index}`"
+              class="font-display text-rot-600 text-4xl lg:text-6xl lg:w-60"
+            >
               {{ name }}
             </h2>
             <p v-for="paragraph in description" :key="paragraph">

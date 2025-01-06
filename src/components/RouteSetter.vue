@@ -16,14 +16,14 @@
         class="text-dill-100 absolute lg:w-10 lg:h-10"
       />
     </div>
-    <div class="grid grid-cols-14" role="grid">
+    <div class="grid grid-cols-14" role="grid" aria-label="Climbing wall grid">
       <button
-        v-for="(item, index) in 112"
+        v-for="(_, index) in 112"
         ref="cellElements"
         :key="index"
         :disabled="index === 6"
         :tabindex="activeGridCell === index ? 0 : -1"
-        :aria-label="holds[index] ? 'Remove hold' : 'Place climbing hold'"
+        :aria-label="getHoldButtonLabel(index, holds[index])"
         @click="onGridClick(index)"
         class="relative leading-0 aspect-square flex justify-center items-center text-dill-400 text-lg group outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-dill-400 hover:text-rot-600 focus-visible:text-rot-600 focus-visible:text-3xl group select-none"
         @keydown.left.prevent="focusCell(cellToLeft)"
@@ -78,31 +78,16 @@ import IconHoldHeart from '@/components/icons/IconHoldHeart.vue'
 import IconHoldRock from '@/components/icons/IconHoldRock.vue'
 import IconHoldWings from '@/components/icons/IconHoldWings.vue'
 import CurvedArrow from '@/components/icons/CurvedArrow.vue'
+import { useGrid } from '@/composables/useGrid'
 
 const holds = ref<(Hold | null)[]>(new Array(112).fill(null))
 const activeGridCell = ref<number>(0)
 const selectedSize = ref<keyof typeof sizeClasses>('md')
 const cellElements = ref<Array<HTMLElement>>([])
 
+const { cellToLeft, cellToRight, cellAbove, cellBelow } = useGrid(activeGridCell)
+
 const totalHolds = computed(() => holds.value.filter((hold) => hold !== null).length)
-
-const cellToLeft = computed(() => {
-  const toLeft = activeGridCell.value % 14 === 0 ? null : activeGridCell.value - 1
-  return toLeft === 6 ? 5 : toLeft
-})
-
-const cellToRight = computed(() => {
-  const toRight = activeGridCell.value % 14 === 13 ? null : activeGridCell.value + 1
-  return toRight === 6 ? 7 : toRight
-})
-
-const cellAbove = computed(() => {
-  return activeGridCell.value < 14 ? null : activeGridCell.value - 14
-})
-
-const cellBelow = computed(() => {
-  return activeGridCell.value > 97 ? null : activeGridCell.value + 14
-})
 
 const leftColumnGroup = createColumnGroup(0, 3)
 const centerColumnGroup = createColumnGroup(4, 8)
@@ -180,11 +165,30 @@ const rightGroupColumnDifficulty = computed(() => {
   )
 })
 
+const DIFFICULTY_THRESHOLDS = {
+  EASY: { density: 0.2, gap: 2 },
+  MODERATE: { density: 0.15, gap: 3 },
+  HARD: { density: 0.1, gap: 4 },
+} as const
+
 function getDifficulty(density: number, largestGap: number, goldZoneFilled: boolean) {
   let difficulty = 4
-  if (density >= 0.2 && largestGap < 2) difficulty = 1
-  else if (density >= 0.15 && largestGap < 3) difficulty = 2
-  else if (density >= 0.1 && largestGap < 4) difficulty = 3
+  if (
+    density >= DIFFICULTY_THRESHOLDS.EASY.density &&
+    largestGap < DIFFICULTY_THRESHOLDS.EASY.gap
+  ) {
+    difficulty = 1
+  } else if (
+    density >= DIFFICULTY_THRESHOLDS.MODERATE.density &&
+    largestGap < DIFFICULTY_THRESHOLDS.MODERATE.gap
+  ) {
+    difficulty = 2
+  } else if (
+    density >= DIFFICULTY_THRESHOLDS.HARD.density &&
+    largestGap < DIFFICULTY_THRESHOLDS.HARD.gap
+  ) {
+    difficulty = 3
+  }
   if (!goldZoneFilled) difficulty = 4
   return difficulty
 }
@@ -231,7 +235,12 @@ function focusCell(cell: null | number) {
   cellElements.value[cell].focus()
 }
 
-const shapes = [
+type Shape = {
+  name: 'carolina' | 'heart' | 'rock' | 'wings' | 'long'
+  maxAngle: number
+}
+
+const shapes: readonly Shape[] = [
   { name: 'carolina', maxAngle: 24 },
   { name: 'heart', maxAngle: 24 },
   { name: 'rock', maxAngle: 100 },
@@ -294,4 +303,11 @@ interface Hold {
 }
 
 type ShapeComponentsInterface = Record<(typeof shapes)[number]['name'], typeof IconHoldCarolina>
+
+function getHoldButtonLabel(index: number, hold: Hold | null): string {
+  if (index === 6) return 'Finish hold - cannot be modified'
+  return hold
+    ? `Remove ${hold.shape} hold at position ${index + 1}`
+    : `Place climbing hold at position ${index + 1}`
+}
 </script>

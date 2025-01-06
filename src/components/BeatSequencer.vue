@@ -35,18 +35,21 @@
             <div
               class="w-0 h-0 absolute top-0 border-l-4 border-l-transparent border-r-transparent border-r-4 border-b-8 border-b-dill-400"
               :style="
-                playing
-                  ? `animation: slide ${bpmToMilliseconds[selectedBpm] * 8}ms linear 0s infinite`
-                  : ''
+                playing ? `animation: slide ${currentBeatInterval * 8}ms linear 0s infinite` : ''
               "
             ></div>
           </div>
         </div>
       </div>
-      <div class="flex gap-2 items-center justify-between">
-        <jh-button @click="onPlaybackClick">{{ playing ? 'stop' : 'play' }}</jh-button>
-        <div class="shrink-0 flex gap-1 text-sm">
-          bpm:
+      <div
+        class="flex gap-2 items-center justify-between"
+        role="group"
+        aria-label="Sequencer Controls"
+      >
+        <jh-button @click="onPlaybackClick" :disabled="!soundLoaded" aria-label="Toggle playback">
+          {{ playing ? 'stop' : 'play' }}
+        </jh-button>
+        <div class="shrink-0 flex gap-1 text-sm" role="group" aria-label="BPM Selection">
           <sequencer-bpm-radio
             v-for="bpm in bpmOptions"
             :key="bpm"
@@ -59,6 +62,7 @@
           <button
             class="w-5.5 h-5.5 border-1 rounded-xs border-transparent hover:border-dill-400 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-dill-400"
             @click="shuffle"
+            aria-label="Shuffle beat pattern"
           >
             <icon-shuffle class="w-full h-full" />
           </button>
@@ -89,6 +93,9 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('visibilitychange', stopSequencer)
   window.removeEventListener('blur', stopSequencer)
+  if (beatInterval) {
+    clearInterval(beatInterval)
+  }
 })
 
 const instruments = ['kick', 'snare', 'hat', 'clap'] as const
@@ -98,7 +105,8 @@ let beatInterval: number
 
 const activeNote = ref<string>(`${instruments[0]}-1`)
 
-const notes = ref<Array<Record<Instrument, boolean>>>([
+type BeatNote = Record<Instrument, boolean>
+const notes = ref<BeatNote[]>([
   { kick: true, snare: false, hat: false, clap: false },
   { kick: false, snare: false, hat: false, clap: false },
   { kick: true, snare: false, hat: false, clap: false },
@@ -125,7 +133,7 @@ const bpmToMilliseconds: Record<BpmOption, number> = {
   140: 214,
 }
 
-const bpmInMilliseconds = computed(() => bpmToMilliseconds[selectedBpm.value])
+const currentBeatInterval = computed(() => bpmToMilliseconds[selectedBpm.value])
 
 watch(selectedBpm, () => {
   restart()
@@ -146,7 +154,7 @@ function startSequencer() {
     })
     playing.value = true
     counter++
-  }, bpmInMilliseconds.value)
+  }, currentBeatInterval.value)
 }
 
 function stopSequencer() {
@@ -155,7 +163,7 @@ function stopSequencer() {
 }
 
 function shuffle() {
-  notes.value = premadeBeats[nextPremadeBeat]
+  notes.value = premadeBeats[nextPremadeBeat].map((note) => ({ ...note }))
   nextPremadeBeat = incrementOrLoop(nextPremadeBeat, premadeBeats.length - 1)
 }
 
@@ -197,6 +205,8 @@ const premadeBeats = [
   ],
 ]
 
+const soundLoaded = ref(false)
+
 sound.add('drums', {
   url: '/sounds/drums.mp3',
   preload: true,
@@ -205,6 +215,9 @@ sound.add('drums', {
     snare: { start: 1, end: 1.8 },
     hat: { start: 2, end: 2.8 },
     clap: { start: 3, end: 3.8 },
+  },
+  loaded: () => {
+    soundLoaded.value = true
   },
 })
 

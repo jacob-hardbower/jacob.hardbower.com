@@ -3,7 +3,10 @@
     ref="container"
     class="relative flex items-center h-6"
     role="slider"
-    :aria-valuenow="regionLabels[size]"
+    :aria-valuenow="size"
+    aria-valuemin="0"
+    aria-valuemax="2"
+    :aria-valuetext="regionLabels[size]"
   >
     <div class="w-full h-1 bg-dill-400 rounded-xs"></div>
     <button
@@ -19,10 +22,12 @@
     <button
       ref="handle"
       class="cursor-grab absolute flex justify-center items-center rounded-xs w-1/3 h-6 before:absolute before:w-2 before:h-full before:bg-dill-600 before:rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-dill-400"
-      :class="positionClasses[size as keyof typeof positionClasses]"
-      :style="`left: ${dragPos}px;`"
-      @keydown.left="selectSize(size - 1)"
-      @keydown.right="selectSize(size + 1)"
+      :class="positionClasses[size]"
+      :style="dragPos !== null ? `left: ${dragPos}px` : undefined"
+      @keydown.left.prevent="selectSize(size - 1)"
+      @keydown.right.prevent="selectSize(size + 1)"
+      @keydown.home.prevent="selectSize(0)"
+      @keydown.end.prevent="selectSize(2)"
     ></button>
   </div>
 </template>

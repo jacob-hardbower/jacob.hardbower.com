@@ -12,8 +12,6 @@ import { ref } from 'vue'
 
 defineProps<{
   title: string[]
-  body: string
-  button: string
 }>()
 
 const heading = ref<HTMLElement>()
