@@ -25,7 +25,9 @@
         <movie-quiz-step
           ref="resultsStep"
           v-else
-          title="After countless calculations, we’ve selected a movie that matches your criteria."
+          :title="[
+            'After countless calculations, we’ve selected a movie that matches your criteria.',
+          ]"
         >
           <form @submit.prevent="restart">
             <article class="p-3.5 bg-dill-200">

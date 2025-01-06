@@ -23,7 +23,7 @@
         :key="index"
         :disabled="index === 6"
         :tabindex="activeGridCell === index ? 0 : -1"
-        :aria-label="holds[index] ? 'Remove hold' : 'Place hold'"
+        :aria-label="holds[index] ? 'Remove hold' : 'Place climbing hold'"
         @click="onGridClick(index)"
         class="relative leading-0 aspect-square flex justify-center items-center text-dill-400 text-lg group outline-none rounded-xs focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-dill-400 hover:text-rot-600 focus-visible:text-rot-600 focus-visible:text-3xl group select-none"
         @keydown.left.prevent="focusCell(cellToLeft)"
