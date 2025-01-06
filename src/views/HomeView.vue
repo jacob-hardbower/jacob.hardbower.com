@@ -1,12 +1,14 @@
 <template>
   <nav
-    class="relative pr-2 flex gap-1 items-center justify-end mb-2 -mt-2 max-w-107 mx-auto md:md:max-w-7xl md:mt-0 md:-mb-10 md:z-10 md:pr-4"
+    class="relative pr-2 flex gap-1 items-center justify-end mb-2 -mt-2 max-w-107 mx-auto sm:gap-2 md:md:max-w-7xl md:mt-0 md:-mb-10 md:z-10 md:pr-4"
   >
     <!-- <router-link :to="{ name: 'blog' }" class="font-display pr-2">Blog</router-link> -->
     <a aria-label="LinkedIn" href="https://www.linkedin.com/in/jhardbower/"
-      ><icon-linked-in class="w-5"
+      ><icon-linked-in class="w-5 sm:w-6"
     /></a>
-    <a aria-label="Github" href="https://github.com/jacob-hardbower"><icon-github class="w-5" /></a>
+    <a aria-label="Github" href="https://github.com/jacob-hardbower"
+      ><icon-github class="w-5 sm:w-6"
+    /></a>
   </nav>
   <div
     class="relative flex flex-col gap-12 text-sm max-w-107 mx-auto md:max-w-7xl md:gap-20 lg:text-base lg:gap-28"
@@ -83,7 +85,6 @@ import RouteSetter from '@/components/RouteSetter.vue'
 import BeatSequencer from '@/components/BeatSequencer.vue'
 import DogCrossword from '@/components/DogCrossword.vue'
 import MovieQuiz from '@/components/MovieQuiz.vue'
-import JhButton from '@/components/JhButton.vue'
 import IconInfo from '@/components/icons/IconInfo.vue'
 import IconGithub from '@/components/icons/IconGithub.vue'
 import IconLinkedIn from '@/components/icons/IconLinkedIn.vue'

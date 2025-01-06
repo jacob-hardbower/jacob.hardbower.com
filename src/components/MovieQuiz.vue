@@ -1,46 +1,45 @@
 <template>
   <div class="@container">
-    <div class="px-4 pt-4 pb-3 @sm:px-5 @sm:pb-5">
-      <div aria-hidden="true" class="text-dill-400 text-xs">> jacobs_movie_db.exe</div>
-      <div class="mt-5">
-        <movie-quiz-step v-if="step !== 6" ref="quizStep" :title="steps[step].title">
-          <div>
-            <p v-if="steps[step].body" class="mb-8 text-sm">
-              {{ steps[step].body }}
-            </p>
-            <form class="flex flex-col items-start gap-3" @submit.prevent="submit">
-              <jh-radio-button
-                v-for="(option, index) in steps[step].options"
-                :required="true"
-                :key="option"
-                :name="`quiz-${step}`"
-                :checked="userInput[step] === steps[step].options?.[index].toLowerCase()"
-                :label="steps[step].options?.[index]"
-                @change="onChange(steps[step].options?.[index].toLowerCase() as MovieKey)"
-              />
-              <jh-button type="submit" class="mt-4">{{ steps[step].button }}</jh-button>
-            </form>
-          </div>
-        </movie-quiz-step>
-        <movie-quiz-step
-          ref="resultsStep"
-          v-else
-          :title="[
-            'After countless calculations, we’ve selected a movie that matches your criteria.',
-          ]"
-        >
-          <form @submit.prevent="restart">
-            <article class="p-3.5 bg-dill-200">
-              <div class="flex gap-2 items-baseline mb-2">
-                <h4 class="font-display text-rot-600 text-2xl">{{ selectedMovie.name }}</h4>
-                <div class="text-xs">({{ selectedMovie.year }})</div>
-              </div>
-              <div class="text-xs">{{ selectedMovie.description }}</div>
-            </article>
-            <jh-button type="submit" class="mt-8">start over</jh-button>
+    <div class="px-4 pt-5 pb-3 @sm:px-5">
+      <movie-quiz-step v-if="step !== 6" ref="quizStep" :title="steps[step].title">
+        <div>
+          <p v-if="steps[step].body" class="mb-8 text-sm">
+            {{ steps[step].body }}
+          </p>
+          <form class="flex flex-col items-start gap-3" @submit.prevent="submit">
+            <jh-radio-button
+              v-for="(option, index) in steps[step].options"
+              :required="true"
+              :key="option"
+              :name="`quiz-${step}`"
+              :checked="userInput[step] === steps[step].options?.[index].toLowerCase()"
+              :label="steps[step].options?.[index]"
+              @change="onChange(steps[step].options?.[index].toLowerCase() as MovieKey)"
+            />
+            <jh-button type="submit" class="mt-4">{{ steps[step].button }}</jh-button>
           </form>
-        </movie-quiz-step>
-      </div>
+        </div>
+      </movie-quiz-step>
+      <movie-quiz-step
+        ref="resultsStep"
+        v-else
+        :title="[
+          'After countless calculations, we’ve selected a movie that matches your criteria.',
+        ]"
+      >
+        <form @submit.prevent="restart">
+          <article class="p-3.5 bg-dill-200">
+            <div class="mb-1">
+              <h4 class="font-display text-rot-600 text-2xl inline mr-1">
+                {{ selectedMovie.name }}
+              </h4>
+              <span class="text-xs">({{ selectedMovie.year }})</span>
+            </div>
+            <div class="text-xs">{{ selectedMovie.description }}</div>
+          </article>
+          <jh-button type="submit" class="mt-4">start over</jh-button>
+        </form>
+      </movie-quiz-step>
     </div>
   </div>
 </template>
@@ -283,7 +282,7 @@ const movieMap: Record<
             name: 'A Girl Walks Home Alone at Night',
             year: 2014,
             description:
-              'In the Iranian ghost-town Bad City, a place that reeks of death and loneliness, the townspeople are unaware they are being stalked by a lonesome vampire.',
+              'In an Iranian ghost-town that reeks of death and loneliness, the townspeople are unaware they are being stalked by a lonesome vampire.',
           },
         },
       },
