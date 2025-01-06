@@ -141,8 +141,6 @@ function startSequencer() {
   let counter = 0
   beatInterval = setInterval(() => {
     if (counter >= 8) counter = 0
-    // if (counter === 0) sound.play('bells', { sprite: 'clip' })
-    // sound.speed('bells', 1.14)
     instruments.forEach((instrument) => {
       if (notes.value[counter][instrument]) sound.play('drums', { sprite: instrument })
     })
