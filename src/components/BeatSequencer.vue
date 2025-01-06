@@ -62,11 +62,6 @@
           >
             <icon-shuffle class="w-full h-full" />
           </button>
-          <!-- <button
-          class="w-5.5 h-5.5 border-1 rounded-xs border-transparent hover:border-dill-400 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-dill-400"
-        >
-          <icon-music-notes class="w-full h-full" />
-        </button> -->
         </div>
       </div>
     </div>
@@ -84,7 +79,6 @@ import IconSnareDrum from '@/components/icons/IconSnareDrum.vue'
 import IconDrumClap from '@/components/icons/IconDrumClap.vue'
 import IconMetronome from '@/components/icons/IconMetronome.vue'
 import IconCymbal from '@/components/icons/IconCymbal.vue'
-import IconMusicNotes from '@/components/icons/IconMusicNotes.vue'
 import IconShuffle from '@/components/icons/IconShuffle.vue'
 
 onMounted(() => {
@@ -204,14 +198,6 @@ const premadeBeats = [
     { kick: false, snare: false, hat: true, clap: true },
   ],
 ]
-
-// sound.add('bells', {
-//   url: '/sounds/bells.mp3',
-//   preload: true,
-//   sprites: {
-//     clip: { start: 0, end: 4 },
-//   },
-// })
 
 sound.add('drums', {
   url: '/sounds/drums.mp3',

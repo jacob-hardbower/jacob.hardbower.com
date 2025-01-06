@@ -163,7 +163,7 @@ function onInput(
 
     directions.forEach((direction) => {
       if (userAnswers.value[wordNum][direction]) {
-        userAnswers.value[wordNum][direction]![charIndex] = character
+        userAnswers.value[wordNum][direction]![charIndex] = character.toLowerCase()
       }
     })
   })
@@ -187,9 +187,7 @@ function checkValidity(row: number, col: number, wordNums: AnswerNumber[]) {
     directions.forEach((direction) => {
       if (userAnswers.value[wordNum][direction]) {
         if (!userAnswers.value[wordNum][direction].every((letter) => letter)) {
-          console.log('okay')
-
-          userAnswers.value[wordNum][direction].forEach((letter, index) => {
+          userAnswers.value[wordNum][direction].forEach((_, index) => {
             const gridRow = direction === 'across' ? row : answers[wordNum].row + index
             const gridCol = direction === 'down' ? col : answers[wordNum].col + index
             inputValidity.value[`${gridRow}${gridCol}`] = undefined
@@ -205,7 +203,7 @@ function checkValidity(row: number, col: number, wordNums: AnswerNumber[]) {
             'valid',
           )
 
-          userAnswers.value[wordNum][direction].forEach((letter, index) => {
+          userAnswers.value[wordNum][direction].forEach((_, index) => {
             const gridRow = direction === 'across' ? row : answers[wordNum].row + index
             const gridCol = direction === 'down' ? col : answers[wordNum].col + index
             inputValidity.value[`${gridRow}${gridCol}`] = wordValidity as Validity

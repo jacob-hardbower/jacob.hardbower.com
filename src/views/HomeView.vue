@@ -126,7 +126,7 @@ const interests: Array<Interest> = [
     imgAlt: 'Monochrome photo of two midi keyboards and a groovebox.',
     component: BeatSequencer,
     componentDescription:
-      'Sequence a drum track by selecting notes on the grid. Change the BPM to give it a different feel. Press mute or clear to stop playback.',
+      'Sequence a drum track by selecting notes on the grid. Change the BPM to give it a different feel.',
   },
   {
     name: 'Dog Wrangler',
