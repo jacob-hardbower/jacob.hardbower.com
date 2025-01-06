@@ -1,26 +1,28 @@
 <template>
   <div class="min-h-63.5">
     <h3 tabindex="-1" ref="heading" class="mb-3 text-lg font-display outline-none">
-      {{ title }}
+      <span class="block" v-for="line in title" :key="line">{{ line }}</span>
     </h3>
     <slot />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
-defineProps({
-  title: String,
-  body: String,
-  button: String,
-})
+defineProps<{
+  title: string[]
+  body: string
+  button: string
+}>()
 
 const heading = ref<HTMLElement>()
 
-onMounted(() => {
-  heading.value?.focus()
-})
-
 defineEmits(['click'])
+
+defineExpose({
+  focus: () => {
+    heading.value?.focus()
+  },
+})
 </script>

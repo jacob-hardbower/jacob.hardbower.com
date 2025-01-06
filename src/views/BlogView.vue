@@ -1,5 +1,5 @@
 <template>
-  <h1>Written words</h1>
+  <h1>Coming soon</h1>
 </template>
 
 <script setup lang="ts">

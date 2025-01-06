@@ -23,6 +23,7 @@
           </div>
         </movie-quiz-step>
         <movie-quiz-step
+          ref="resultsStep"
           v-else
           title="After countless calculations, we’ve selected a movie that matches your criteria."
         >
@@ -50,6 +51,7 @@ import JhButton from '@/components/JhButton.vue'
 
 const step = ref<number>(0)
 const quizStep = ref<HTMLElement>()
+const resultsStep = ref<HTMLElement>()
 
 const selectedMovie = computed(() => {
   const [speed, element, temp, color, shape] = userInput.value.slice().reverse()
@@ -66,32 +68,32 @@ interface Movie {
 
 const steps = [
   {
-    title: "Clear your next one to four hours...We're going to the movies!",
+    title: ['Clear your next one to four hours...', "We're going to the movies!"],
     body: 'Take the quiz and allow me to hand-pick a flick that vibes with your selections!',
     button: 'start quiz',
   },
   {
-    title: 'Through writing, direction, and performance, a shape begins to form.',
+    title: ['Through writing, direction, and performance, a shape begins to form.'],
     button: 'continue',
     options: ['Triangle', 'Circle'],
   },
   {
-    title: 'Creative decisions, small details, and happy accidents provide color.',
+    title: ['Creative decisions, small details, and happy accidents provide color.'],
     button: 'continue',
     options: ['Blue', 'Orange'],
   },
   {
-    title: 'Emotion, perspective, and presentation set a temperature for the narrative.',
+    title: ['Emotion, perspective, and presentation set a temperature for the narrative.'],
     button: 'continue',
     options: ['Hot', 'Cold'],
   },
   {
-    title: 'Romance, humor, drama, and action are just a few of the elements.',
+    title: ['Romance, humor, drama, and action are just a few of the elements.'],
     button: 'continue',
     options: ['Fire', 'Water'],
   },
   {
-    title: 'Slow burn or roller coaster, pacing plays a crucial role.',
+    title: ['Slow burn or roller coaster, pacing plays a crucial role.'],
     button: 'submit',
     options: ['Run', 'Walk'],
   },
@@ -99,11 +101,23 @@ const steps = [
 
 function submit() {
   step.value++
+  focusStep()
+}
+
+function focusStep() {
+  setTimeout(() => {
+    if (step.value === 6) {
+      resultsStep.value?.focus()
+    } else {
+      quizStep.value?.focus()
+    }
+  })
 }
 
 function restart() {
   step.value = 0
   userInput.value = []
+  focusStep()
 }
 
 function onChange(value: MovieKey) {

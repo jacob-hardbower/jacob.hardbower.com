@@ -1,20 +1,34 @@
 <template>
   <div class="@container">
-    <div class="px-4 pt-4 pb-3 flex flex-col items-center gap-y-6 gap-x-3 @sm:p-5 @sm:flex-row">
+    <div class="px-4 pt-4 pb-4 flex flex-col items-center gap-y-6 gap-x-3 @sm:p-5 @sm:flex-row">
       <div>
         <h3 class="font-display text-lg mb-1.5">Across</h3>
-        <ol class="text-xs mb-4">
-          <li>1. <label for="12">Vocalization directed toward deer</label></li>
-          <li>2. <label for="31">Actress Streisand or Stanwyck</label></li>
-          <li>3. <label for="52">A favorite pastime</label></li>
-          <li>6. <label for="71">Rough-housing, wrestling, fetch</label></li>
+        <ol class="text-xs mb-2 flex flex-col gap-1">
+          <li class="flex gap-1.5">
+            1. <label for="12" class="text-pretty">Vocalization directed toward deer</label>
+          </li>
+          <li class="flex gap-1.5">
+            2. <label for="31" class="text-pretty">Actress Streisand or Stanwyck</label>
+          </li>
+          <li class="flex gap-1.5">
+            3. <label for="52" class="text-pretty">A favorite pastime</label>
+          </li>
+          <li class="flex gap-1.5">
+            6. <label for="71" class="text-pretty">Rough-housing, wrestling, fetch</label>
+          </li>
         </ol>
 
         <h3 class="font-display text-lg mb-1.5">Down</h3>
-        <ol class="text-xs">
-          <li>1. <label for="12">Legumes used in chili</label></li>
-          <li>4. <label for="53">Dog-walking tool</label></li>
-          <li>5. <label for="56">Occasionally, on the chair leg</label></li>
+        <ol class="text-xs flex flex-col gap-1">
+          <li class="flex gap-1.5">
+            1. <label for="12" class="text-pretty">Legumes used in chili</label>
+          </li>
+          <li class="flex gap-1.5">
+            4. <label for="53" class="text-pretty">Dog-walking tool</label>
+          </li>
+          <li class="flex gap-1.5">
+            5. <label for="56" class="text-pretty">Occasionally, on the chair leg</label>
+          </li>
         </ol>
       </div>
       <div class="inline-grid grid-cols-7 grid-rows-9 shrink-0">
@@ -36,7 +50,7 @@
             :id="`${row}${col}`"
             pattern="[a-zA-Z]*"
             autocomplete="off"
-            class="uppercase text-center w-6 h-6 outline-none inset-ring-1 ring-1 inset-ring-dill-400 rounded-xs focus-visible:inset-ring-2 focus-visible:inset-ring-white focus-visible:z-10"
+            class="uppercase text-center w-7 h-7 outline-none inset-ring-1 ring-1 inset-ring-dill-400 rounded-xs focus-visible:inset-ring-2 focus-visible:inset-ring-white focus-visible:z-10"
             :class="[
               { 'inset-ring-rot-600 ring-red-600': inputValidity[`${row}${col}`] === 'invalid' },
               {

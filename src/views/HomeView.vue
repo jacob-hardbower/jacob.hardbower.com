@@ -2,7 +2,7 @@
   <nav
     class="relative pr-2 flex gap-1 items-center justify-end mb-2 -mt-2 max-w-107 mx-auto md:md:max-w-7xl md:mt-0 md:-mb-10 md:z-10 md:pr-4"
   >
-    <router-link :to="{ name: 'blog' }" class="font-display pr-2">Blog</router-link>
+    <!-- <router-link :to="{ name: 'blog' }" class="font-display pr-2">Blog</router-link> -->
     <a aria-label="LinkedIn" href="https://www.linkedin.com/in/jhardbower/"
       ><icon-linked-in class="w-5"
     /></a>
@@ -59,7 +59,7 @@
     </main>
 
     <footer class="flex flex-col items-center">
-      <div
+      <!-- <div
         class="relative flex flex-col gap-4 items-start border-2 border-dill-100 rounded-sm p-4 bg-dill-200 -mb-4 z-10 max-w-3xl md:mx-4 md:flex-row md:-mb-8"
       >
         <div>
@@ -67,9 +67,9 @@
           over on my blog.
         </div>
         <jh-button class="shrink-0" to="blog">go to blog</jh-button>
-      </div>
+      </div> -->
       <div
-        class="bg-dill-100 text-dill-400 font-display text-xl pt-8 pb-4 px-4 rounded-sm w-full md:text-center md:pt-14 md:pb-6"
+        class="bg-dill-100 text-dill-400 font-display text-xl pt-5 pb-4 px-4 rounded-sm w-full md:text-center md:pt-7 md:pb-6"
       >
         That's all. Go outside!
       </div>
@@ -97,7 +97,7 @@ interface Interest {
   description: Array<string>
   img: string
   imgAlt: string
-  component: typeof RouteSetter
+  component: typeof RouteSetter | typeof BeatSequencer | typeof DogCrossword | typeof MovieQuiz
   componentDescription: string
 }
 
