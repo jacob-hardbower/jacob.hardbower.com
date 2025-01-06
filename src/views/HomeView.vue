@@ -18,7 +18,7 @@
       </h1>
       <div class="bg-dill-800 p-2 flex gap-2 text-dill-200 text-xs rounded-b-sm md:justify-center">
         <icon-info class="w-3.5 h-3.5 shrink-0" />
-        <div>I do a few other things in my spare time. What follows are a few descriptors.</div>
+        <div>I do some other things in my spare time. What follows are a few descriptors.</div>
       </div>
     </header>
 
